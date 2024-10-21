@@ -5,8 +5,8 @@ import IBEX_components
 
 # Dictionary of pages
 pages = {
-    "Page 1": IBEX,
-    "Page 2": IBEX_components
+    "Main Page": IBEX,
+    "Components IBEX": IBEX_components
 }
 
 # Sidebar for navigation
