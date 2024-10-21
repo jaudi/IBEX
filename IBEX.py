@@ -119,36 +119,36 @@ def app():
         return info_ibex
 
     # Function to retrieve price data
-    def prices(ticker=add_selectbox ):
-        price = yf.download(ticker, period=period)
-        return price
-
-    # Retrieve fundamental data and price data for the default ticker
-    fundamental_df = fundamental_data(add_selectbox).transpose()
-    price_df = prices()
-
-    # Calculate the returns
-    price_df['Return'] = (1 + price_df['Close'].pct_change()).cumprod()
-
-
-
-
-    st.header("Prices")
-    st.line_chart(price_df["Close"])
-
-
-    st.header("Returns")
-    st.line_chart(price_df["Return"])
-
-    col1, col2=st.columns(2)
-    with col1:
-
-        st.header("Ratios")
-        st.dataframe(fundamental_df)
-
-    with col2:
-        st.header("Information about the company")
-        st.write(yf.Ticker(add_selectbox).info.get('longBusinessSummary',"no info"))
-
-
+        def prices(ticker=add_selectbox ):
+            price = yf.download(ticker, period=period)
+            return price
+    
+        # Retrieve fundamental data and price data for the default ticker
+        fundamental_df = fundamental_data(add_selectbox).transpose()
+        price_df = prices()
+    
+        # Calculate the returns
+        price_df['Return'] = (1 + price_df['Close'].pct_change()).cumprod()
+    
+    
+    
+    
+        st.header("Prices")
+        st.line_chart(price_df["Close"])
+    
+    
+        st.header("Returns")
+        st.line_chart(price_df["Return"])
+    
+        col1, col2=st.columns(2)
+        with col1:
+    
+            st.header("Ratios")
+            st.dataframe(fundamental_df)
+    
+        with col2:
+            st.header("Information about the company")
+            st.write(yf.Ticker(add_selectbox).info.get('longBusinessSummary',"no info"))
+    
+    
 
