@@ -32,7 +32,7 @@ def app():
 
     period = st.sidebar.radio(
         "Select the time period for historical data:",
-        ('1y', '3y', '5y', '10y', 'ytd')
+        ('1y', '5y', '10y', 'ytd')
     )
 
     # Lists to store the data for fundamental ratios
@@ -78,6 +78,7 @@ def app():
     st.header("Prices")
     st.line_chart(price_df["Close"])
 
+    
     st.header("Returns")
     st.line_chart(price_df["Return"])
 
