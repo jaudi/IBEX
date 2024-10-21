@@ -74,6 +74,7 @@ def app():
 
     # Calculate the cumulative returns
     price_df['Return'] = (1 + price_df['Close'].pct_change()).cumprod()
+    price_df['Return']=price_df['Return'].fillna(0)
 
     # Display the data
     st.header("Prices")
