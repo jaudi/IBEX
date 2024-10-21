@@ -1,4 +1,4 @@
-import streamlit as st
+iimport streamlit as st
 import pandas as pd
 import yfinance as yf
 
@@ -65,7 +65,8 @@ def app():
 
     # Function to retrieve price data
     def get_price_data(ticker, period):
-        return yf.download(ticker, period=period,interval="1d")
+        price=yf.download(ticker, period=period,interval="1d")
+        return price
 
     # Retrieve fundamental data and price data
     fundamental_df = get_fundamental_data(ticker).transpose()
