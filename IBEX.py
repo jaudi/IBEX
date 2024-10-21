@@ -65,7 +65,7 @@ def app():
 
     # Function to retrieve price data
     def get_price_data(ticker, period):
-        return yf.download(ticker, period=period)
+        return yf.download(ticker, period=period,interval="1d")
 
     # Retrieve fundamental data and price data
     fundamental_df = get_fundamental_data(ticker).transpose()
