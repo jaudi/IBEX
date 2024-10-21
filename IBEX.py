@@ -77,7 +77,7 @@ def app():
 
     # Display the data
     st.header("Prices")
-    st.line_chart(price_df["Open"])
+    st.bar_chart(price_df["Close"])
 
     
     st.header("Returns")
