@@ -79,7 +79,7 @@ def app():
     # Display the data
     st.header("Prices")
     st.write(price_df)
-
+    st.line_chart(price_df["Close"]
     
     st.header("Returns")
     st.line_chart(price_df["Return"])
