@@ -77,7 +77,7 @@ def app():
 
     # Display the data
     st.header("Prices")
-    st.line_chart(price_df["Return"])
+    st.write(price_df)
 
     
     st.header("Returns")
