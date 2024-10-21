@@ -64,13 +64,13 @@ def app():
         return pd.DataFrame(symbol_data)
 
     # Function to retrieve price data
-    def get_price_data(ticker, period):
-        price=yf.download(ticker, period=period,interval="1d")
-        return price
+    
+        price_df=yf.download(ticker, period=period,interval="1d")
+        
 
     # Retrieve fundamental data and price data
     fundamental_df = get_fundamental_data(ticker).transpose()
-    price_df = get_price_data(ticker, period)
+    
 
     # Calculate the cumulative returns
     price_df['Return'] = (1 + price_df['Close'].pct_change()).cumprod()
