@@ -66,7 +66,7 @@ def app():
     # Function to retrieve price data
     
     price_df=yf.download(ticker, period=period,interval="1d")
-    price_df.columns=["Adj Close","Close","High","Low","Open","Volume"]   
+    price_df.columns=["Close","High","Low","Open","Volume"]   
 
     # Retrieve fundamental data and price data
     fundamental_df = get_fundamental_data(ticker).transpose()
