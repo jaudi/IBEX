@@ -94,6 +94,23 @@ def app():
         st.header("Information about the Company")
         company_info = yf.Ticker(ticker).info.get('longBusinessSummary', "No information available")
         st.write(company_info)
+    price_df['200MA'] = price_df['Close'].rolling(window=200).mean()
+    price_df['150MA']=price_df['Close'].rolling(window=150).mean()
+    price_df['100MA']=price_df['Close'].rolling(window=100).mean()
+    price_df['50MA']=price_df['Close'].rolling(window=50).mean()
+    MA200=price_df['200MA'].iloc[-1]
+    MA150=price_df['150MA'].iloc[-1]
+    MA50=price_df['50MA'].iloc[-1]
+    col1, col2, col3=st.columns(3)
+    with col1:
+        st.header("Moving average 200")
+        st.write(MA200)
+    with col2:
+        st.header("Moving average 150")
+        st.write(MA150)
+    with col3:
+        st.header("Moving average 50")
+        st.write(MA50)
 
 # Call the app function to run the Streamlit app
 if __name__ == "__main__":
