@@ -112,7 +112,7 @@ def app():
     with col3:
         st.subheader("Moving average 50")
         st.metric(label="MA50", value=f"{MA50:2f}")
-
+    st.bar_chart(price_df["Volume"])
 # Call the app function to run the Streamlit app
 if __name__ == "__main__":
     app()
