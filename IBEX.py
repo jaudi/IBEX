@@ -86,7 +86,7 @@ def app():
     st.line_chart(price_df["Return"])
 
     st.header('Volume")
-    st.bar_chart(price_df["Volume"]
+    st.bar_chart(price_df["Volume"])
 
     col1, col2 = st.columns(2)
     with col1:
