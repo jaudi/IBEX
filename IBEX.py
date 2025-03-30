@@ -103,14 +103,15 @@ def app():
     MA50=price_df['50MA'].iloc[-1]
     col1, col2, col3=st.columns(3)
     with col1:
-        st.header("Moving average 200")
-        st.write(MA200)
+        st.subheader("Moving average 200")
+        st.metric(label="MA200", value= f"{MA200:.2f}")
     with col2:
-        st.header("Moving average 150")
-        st.write(MA150)
+        st.subheader("Moving average 150")
+        st.metric(label="MA150", value=f"{MA150:.2f}")
+        
     with col3:
-        st.header("Moving average 50")
-        st.write(MA50)
+        st.subheader("Moving average 50")
+        st.metric(label="MA50", value=f"{MA50:2f}")
 
 # Call the app function to run the Streamlit app
 if __name__ == "__main__":
