@@ -85,6 +85,9 @@ def app():
     st.header("Returns")
     st.line_chart(price_df["Return"])
 
+    st.header('Volume")
+    st.bar_chart(price_df["Volume"]
+
     col1, col2 = st.columns(2)
     with col1:
         st.header("Ratios")
@@ -111,8 +114,7 @@ def app():
         
     with col3:
         st.subheader("Moving average 50")
-        st.metric(label="MA50", value=f"{MA50:2f}")
-    st.bar_chart(price_df["Volume"])
+        st.metric(label="MA50", value=f"{MA50:.2f}")
 # Call the app function to run the Streamlit app
 if __name__ == "__main__":
     app()
