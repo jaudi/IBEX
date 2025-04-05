@@ -119,15 +119,9 @@ def app():
         st.metric(label="MA50", value=f"{MA50:.2f}")
 # Call the app function to run the Streamlit app
    
-Disclaimer
-This application is created by Javier Audibert (javier.audibert@gmail.com) for recreational purposes only. The data provided is sourced from Yahoo Finance and is subject to change without notice. The author is not responsible for any errors or inaccuracies in the data. By using this application, you acknowledge that you understand and agree to these terms.
 
-Puedes agregarlo en tu código de la siguiente manera:
 
-```
-...
 
-Disclaimer
 st.markdown("""
 ## Disclaimer
 This application is created by Javier Audibert (javier.audibert@gmail.com) for recreational purposes only. The data provided is sourced from Yahoo Finance and is subject to change without notice. The author is not responsible for any errors or inaccuracies in the data. By using this application, you acknowledge that you understand and agree to these terms.
