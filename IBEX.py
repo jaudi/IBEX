@@ -16,7 +16,10 @@ def app():
     )
     st.title("IBEX 35 Analysis")
     st.markdown("This program allows you to choose a ticker from the IBEX 35 and visualize price history, returns, and fundamental ratios.")
-
+    st.markdown("""
+    ## Disclaimer
+    This application is created by Javier Audibert (javier.audibert@gmail.com) for recreational purposes only. The data provided is sourced from Yahoo Finance and is subject to change without notice. The author is not responsible for any errors or inaccuracies in the data. By using this application, you acknowledge that you understand and agree to these terms.
+    """)
     # Sidebar for ticker selection and time period
     ticker = st.sidebar.selectbox(
         "Choose a ticker from IBEX 35",
@@ -118,9 +121,6 @@ def app():
         st.subheader("Moving average 50")
         st.metric(label="MA50", value=f"{MA50:.2f}")
 # Call the app function to run the Streamlit app
-st.markdown("""
-## Disclaimer
-This application is created by Javier Audibert (javier.audibert@gmail.com) for recreational purposes only. The data provided is sourced from Yahoo Finance and is subject to change without notice. The author is not responsible for any errors or inaccuracies in the data. By using this application, you acknowledge that you understand and agree to these terms.
-""")
+
 if __name__ == "__main__":
     app()
