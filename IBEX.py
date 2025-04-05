@@ -89,7 +89,7 @@ def app():
     st.bar_chart(price_df["Volume"])
     st.download_button(label="Download prices in CSV",
     data=price_df.to_csv(index=True),file_name=f"prices_{ticker}_{period}.csv",mime="text/csv")
-    st.dowload_button(label="Download fundamental data", data=fundamental_df.to_csv(index,=True),file_name=f"fundamentals_{ticker}.csv", mime="text/csv")
+    st.download_button(label="Download fundamental data", data=fundamental_df.to_csv(index=True),file_name=f"fundamentals_{ticker}.csv", mime="text/csv")
     col1, col2 = st.columns(2)
     with col1:
         st.header("Ratios")
