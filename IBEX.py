@@ -80,7 +80,7 @@ def app():
     price_df['Return']=price_df['Return'].fillna(0)
 
     # Display the data
-    st.header("Prices")
+    st.header(f"Prices of {ticker}")
     st.write(price_df)
     st.header("Close Prices")
     st.line_chart(price_df["Close"])
