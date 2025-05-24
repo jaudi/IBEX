@@ -78,7 +78,7 @@ def app():
         company_info = yf.Ticker(ticker).info.get('longBusinessSummary', "No information available")
         price_df = process_price_data(price_df)
 
-    tab1, tab2, tab3 = st.tabs(["Charts", "Fundamentals", "Company Info"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Charts", "Fundamentals", "Company Info", "Risk"])
 
     with tab1:
         st.header(f"{ticker} - Price Data")
@@ -98,6 +98,25 @@ def app():
     with tab3:
         st.header("Company Summary")
         st.write(company_info)
+        
+    with tab4:
+        st.header("Risk Metrics")
+        returns = price_df['Close'].pct_change().dropna()
+        if not returns.empty:
+        volatility = returns.std() * (252**0.5)
+        sharpe = (returns.mean() / returns.std()) * (252**0.5)
+        cumulative = (1 + returns).cumprod()
+        drawdown = 1 - cumulative / cumulative.cummax()
+        max_dd = drawdown.max()
+        var_95 = returns.quantile(0.05)
+
+        st.metric("Annualized Volatility", f"{volatility:.2%}")
+        st.metric("Sharpe Ratio (0% rf)", f"{sharpe:.2f}")
+        st.metric("Max Drawdown", f"{max_dd:.2%}")
+        st.metric("VaR (95%)", f"{var_95:.2%}")
+    else:
+        st.warning("Not enough return data to calculate risk metrics.")
+
         import streamlit as st import pandas as pd import yfinance as yf import numpy as np import matplotlib.pyplot as plt
 
 Cache price data
