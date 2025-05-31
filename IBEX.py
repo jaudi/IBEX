@@ -6,7 +6,7 @@ import yfinance as yf
 @st.cache_data 
 def load_price_data(ticker, period):
     df = yf.download(ticker, period=period, interval="1d")
-    df.columns = ["Open", "High", "Low", "Close", "Adj Close", "Volume"][:len(df.columns)]
+    df.columns = ["Open", "High", "Low", "Close", "Volume"][:len(df.columns)]
     return df
 
 
