@@ -117,23 +117,23 @@ def app():
          st.warning("Not enough return data to calculate risk metrics.")
 
       with tab5:
-         st.header ("Glossary")
-         st.write (" Below are some key financual metrics")
-         st.subheader("ROA (Return on Assets)") 
-         st.write("ROA is a metric that measures a company's profitability in relation to its assets. It's calculated by dividing net income by total assets.")
-         st.latex(r"ROA = \frac{Net\ Income}{Total\ Assets}")
+           st.header ("Glossary")
+           st.write (" Below are some key financual metrics")
+           st.subheader("ROA (Return on Assets)") 
+           st.write("ROA is a metric that measures a company's profitability in relation to its assets. It's calculated by dividing net income by total assets.")
+           st.latex(r"ROA = \frac{Net\ Income}{Total\ Assets}")
 
-         st.subheader("ROE (Return on Equity)")
-         st.write("ROE is a metric that measures a company's profitability in relation to shareholder equity. It's calculated by dividing net income by shareholder equity.")
-         st.latex(r"ROE = \frac{Net\ Income}{Shareholder\ Equity}")
+           st.subheader("ROE (Return on Equity)")
+           st.write("ROE is a metric that measures a company's profitability in relation to shareholder equity. It's calculated by dividing net income by shareholder equity.")
+           st.latex(r"ROE = \frac{Net\ Income}{Shareholder\ Equity}")
 
-         st.subheader("P/E Ratio (Price-to-Earnings Ratio)")
-         st.write("The P/E ratio is a metric that measures the relationship between a stock's price and its earnings per share. It's calculated by dividing the stock price by earnings per share.")
-         st.latex(r"P/E\ Ratio = \frac{Stock\ Price}{Earnings\ per\ Share}")
+           st.subheader("P/E Ratio (Price-to-Earnings Ratio)")
+           st.write("The P/E ratio is a metric that measures the relationship between a stock's price and its earnings per share. It's calculated by dividing the stock price by earnings per share.")
+           st.latex(r"P/E\ Ratio = \frac{Stock\ Price}{Earnings\ per\ Share}")
 
-         st.subheader("Dividend Yield")
-         st.write("Dividend yield is a metric that measures the return on investment for a stock based on its dividend payments. It's calculated by dividing the annual dividend by the stock price.")
-         st.latex(r"Dividend\ Yield = \frac{Annual\ Dividend}{Stock\ Price}")
+           st.subheader("Dividend Yield")
+           st.write("Dividend yield is a metric that measures the return on investment for a stock based on its dividend payments. It's calculated by dividing the annual dividend by the stock price.")
+           st.latex(r"Dividend\ Yield = \frac{Annual\ Dividend}{Stock\ Price}")
 
 
 
