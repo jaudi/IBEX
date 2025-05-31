@@ -4,10 +4,12 @@ import yfinance as yf
 
 
 
-@st.cache_data def load_price_data(ticker, period): df = yf.download(ticker, period=period, interval="1d") df.columns = ["Close", "High", "Low", "Open", "Volume"] return df
+@st.cache_data 
+def load_price_data(ticker, period): df = yf.download(ticker, period=period, interval="1d") df.columns = ["Close", "High", "Low", "Open", "Volume"] return df
 
 
-@st.cache_data def get_fundamental_data(ticker): symbol_data = { "Symbol": [], "Current Price": [], "Dividend Yield": [], "ROA": [], "ROE": [], "Earnings Growth": [], "Revenue Growth": [], "Gross Margins": [], "Operating Margins": [], "P/E Ratio": [] } try: info = yf.Ticker(ticker).info symbol_data["Symbol"].append(info.get("symbol", "no info")) symbol_data["Current Price"].append(info.get("currentPrice", "no info")) symbol_data["Dividend Yield"].append(info.get("dividendYield", "no info")) symbol_data["ROA"].append(info.get("returnOnAssets", "no info")) symbol_data["ROE"].append(info.get("returnOnEquity", "no info")) symbol_data["Earnings Growth"].append(info.get("earningsGrowth", "no info")) symbol_data["Revenue Growth"].append(info.get("revenueGrowth", "no info")) symbol_data["Gross Margins"].append(info.get("grossMargins", "no info")) symbol_data["Operating Margins"].append(info.get("operatingMargins", "no info")) symbol_data["P/E Ratio"].append(info.get("trailingPE", "no info")) except: st.error("Failed to fetch fundamental data.") return pd.DataFrame(symbol_data).transpose()
+@st.cache_data
+def get_fundamental_data(ticker): symbol_data = { "Symbol": [], "Current Price": [], "Dividend Yield": [], "ROA": [], "ROE": [], "Earnings Growth": [], "Revenue Growth": [], "Gross Margins": [], "Operating Margins": [], "P/E Ratio": [] } try: info = yf.Ticker(ticker).info symbol_data["Symbol"].append(info.get("symbol", "no info")) symbol_data["Current Price"].append(info.get("currentPrice", "no info")) symbol_data["Dividend Yield"].append(info.get("dividendYield", "no info")) symbol_data["ROA"].append(info.get("returnOnAssets", "no info")) symbol_data["ROE"].append(info.get("returnOnEquity", "no info")) symbol_data["Earnings Growth"].append(info.get("earningsGrowth", "no info")) symbol_data["Revenue Growth"].append(info.get("revenueGrowth", "no info")) symbol_data["Gross Margins"].append(info.get("grossMargins", "no info")) symbol_data["Operating Margins"].append(info.get("operatingMargins", "no info")) symbol_data["P/E Ratio"].append(info.get("trailingPE", "no info")) except: st.error("Failed to fetch fundamental data.") return pd.DataFrame(symbol_data).transpose()
 
 
 
