@@ -94,7 +94,6 @@ def app():
         st.header("Fundamental Ratios")
         st.dataframe(fundamental_df)
         st.download_button("Download Fundamentals CSV", fundamental_df.to_csv(), f"{ticker}_fundamentals.csv", "text/csv")
-
     with tab3:
         st.header("Company Summary")
         st.write(company_info)
@@ -117,7 +116,7 @@ def app():
         else:
          st.warning("Not enough return data to calculate risk metrics.")
 
-     with tab5:
+      with tab5:
          st.header ("Glossary")
          st.write (" Below are some key financual metrics")
          st.subheader("ROA (Return on Assets)") 
