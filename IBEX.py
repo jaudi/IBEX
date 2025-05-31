@@ -118,7 +118,7 @@ def app():
          st.warning("Not enough return data to calculate risk metrics.")
 
      with tab5:
-         st.title ("Glossary")
+         st.header ("Glossary")
          st.write (" Below are some key financual metrics")
          st.subheader("ROA (Return on Assets)") 
          st.write("ROA is a metric that measures a company's profitability in relation to its assets. It's calculated by dividing net income by total assets.")
