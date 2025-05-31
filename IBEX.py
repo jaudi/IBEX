@@ -116,7 +116,7 @@ def app():
         else:
          st.warning("Not enough return data to calculate risk metrics.")
 
-      with tab5:
+     with tab5:
            st.header ("Glossary")
            st.write (" Below are some key financual metrics")
            st.subheader("ROA (Return on Assets)") 
