@@ -83,7 +83,7 @@ def app():
 
     with tab1:
         st.header(f"{ticker} - Price Data")
-        st.line_chart(price_df["Close"])
+        st.line_chart(price_df["Close"],price_df["50MA"])
         st.header("Returns")
         st.line_chart(price_df["Return"])
         st.header("Volume")
