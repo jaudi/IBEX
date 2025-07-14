@@ -123,7 +123,7 @@ def app():
         returns = price_df['Close'].pct_change().dropna()
         if not returns.empty:
             volatility = returns.std() * (252**0.5)
-            sharpe = (returns.mean() / returns.std()) * (252**0.5) if returns.std() != 0 else 0
+            sharpe = (returns.mean() / returns.std()) * (252**0.5) 
             cumulative = (1 + returns).cumprod()
             drawdown = 1 - cumulative / cumulative.cummax()
             max_dd = drawdown.max()
