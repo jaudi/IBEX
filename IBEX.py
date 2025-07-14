@@ -99,7 +99,7 @@ def app():
         company_info = yf.Ticker(ticker).info.get('longBusinessSummary', "No information available")
         price_df = process_price_data(price_df)
 
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Charts", "Fundamentals", "Company Info", "Risk", "RSI", "Glossary"])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Charts", "Fundamentals", "Risk", "RSI", "Glossary"])
 
     with tab1:
         st.header(f"{ticker} - Price Data")
@@ -116,11 +116,9 @@ def app():
         st.dataframe(fundamental_df)
         st.download_button("Download Fundamentals CSV", fundamental_df.to_csv(), f"{ticker}_fundamentals.csv", "text/csv")
 
-    with tab3:
-        st.header("Company Summary")
-        st.write(company_info)
+    
 
-    with tab4:
+    with tab3:
         st.header("Risk Metrics")
         returns = price_df['Close'].pct_change().dropna()
         if not returns.empty:
@@ -139,7 +137,7 @@ def app():
             st.warning("Not enough return data to calculate risk metrics.")
 
     # Tab with updated RSI definition
-    with tab5:
+    with tab4:
         st.header("Relative Strength Index (RSI)")
         st.line_chart(price_df["RSI"])
         st.info(
@@ -152,7 +150,7 @@ def app():
         )
 
     # Glossary tab with updated RSI definition
-    with tab6:
+    with tab5:
         st.header("Glossary")
         st.write("Below are some key financial metrics and technical indicators.")
 
