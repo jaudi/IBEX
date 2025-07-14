@@ -1,17 +1,20 @@
-import streamlit as st 
-import pandas as pd 
+import streamlit as st
+import pandas as pd
 import yfinance as yf
 
 
-@st.cache_data 
+@st.cache_data
 def load_price_data(ticker, period):
+    """Loads historical price data for a given ticker."""
     df = yf.download(ticker, period=period, interval="1d")
-    df.columns = ["Open", "High", "Low", "Close", "Volume"]
+    # Use standard column names for clarity
+    df.columns = ["Open", "High", "Low", "Close", "Adj Close", "Volume"]
     return df
 
 
 @st.cache_data
 def get_fundamental_data(ticker):
+    """Fetches key fundamental data points for a given ticker."""
     symbol_data = {
         "Symbol": [], "Current Price": [], "Dividend Yield": [], "ROA": [],
         "ROE": [], "Earnings Growth": [], "Revenue Growth": [],
@@ -19,31 +22,46 @@ def get_fundamental_data(ticker):
     }
     try:
         info = yf.Ticker(ticker).info
-        symbol_data["Symbol"].append(info.get("symbol", "no info"))
-        symbol_data["Current Price"].append(info.get("currentPrice", "no info"))
-        symbol_data["Dividend Yield"].append(info.get("dividendYield", "no info"))
-        symbol_data["ROA"].append(info.get("returnOnAssets", "no info"))
-        symbol_data["ROE"].append(info.get("returnOnEquity", "no info"))
-        symbol_data["Earnings Growth"].append(info.get("earningsGrowth", "no info"))
-        symbol_data["Revenue Growth"].append(info.get("revenueGrowth", "no info"))
-        symbol_data["Gross Margins"].append(info.get("grossMargins", "no info"))
-        symbol_data["Operating Margins"].append(info.get("operatingMargins", "no info"))
-        symbol_data["P/E Ratio"].append(info.get("trailingPE", "no info"))
+        symbol_data["Symbol"].append(info.get("symbol", "N/A"))
+        symbol_data["Current Price"].append(info.get("currentPrice", "N/A"))
+        symbol_data["Dividend Yield"].append(info.get("dividendYield", "N/A"))
+        symbol_data["ROA"].append(info.get("returnOnAssets", "N/A"))
+        symbol_data["ROE"].append(info.get("returnOnEquity", "N/A"))
+        symbol_data["Earnings Growth"].append(info.get("earningsGrowth", "N/A"))
+        symbol_data["Revenue Growth"].append(info.get("revenueGrowth", "N/A"))
+        symbol_data["Gross Margins"].append(info.get("grossMargins", "N/A"))
+        symbol_data["Operating Margins"].append(info.get("operatingMargins", "N/A"))
+        symbol_data["P/E Ratio"].append(info.get("trailingPE", "N/A"))
     except Exception as e:
         st.error(f"Failed to fetch fundamental data: {e}")
-    
+
     return pd.DataFrame(symbol_data).transpose()
 
 
+def calculate_rsi(df, window=14):
+    """Calculates the Relative Strength Index (RSI)."""
+    delta = df['Close'].diff()
+    gain = (delta.where(delta > 0, 0)).rolling(window=window).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=window).mean()
+
+    # Avoid division by zero
+    rs = gain / loss
+    df['RSI'] = 100 - (100 / (1 + rs))
+    return df
+
+
 def process_price_data(df):
+    """Calculates returns, moving averages, and other metrics."""
     df['Return'] = (1 + df['Close'].pct_change()).cumprod() - 1
     df['Return'] = df['Return'].fillna(0)
     for ma in [50, 100, 150, 200]:
         df[f'{ma}MA'] = df['Close'].rolling(window=ma).mean()
+    df = calculate_rsi(df)  # Calculate RSI
     return df
 
 
 def display_moving_averages(df):
+    """Displays key moving average metrics."""
     cols = st.columns(3)
     for i, ma in enumerate([200, 150, 50]):
         if len(df) >= ma:
@@ -57,6 +75,7 @@ def display_moving_averages(df):
 
 
 def app():
+    """Main function to run the Streamlit application."""
     st.markdown("<style>main {background-color: #f5f5f5;}</style>", unsafe_allow_html=True)
     st.title("IBEX 35 Analysis")
     st.markdown("Visualize price history, returns, and fundamental ratios from Yahoo Finance.")
@@ -79,7 +98,8 @@ def app():
         company_info = yf.Ticker(ticker).info.get('longBusinessSummary', "No information available")
         price_df = process_price_data(price_df)
 
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Charts", "Fundamentals", "Company Info", "Risk", "Glossary"])
+    # Added a new tab for RSI
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Charts", "Fundamentals", "Company Info", "Risk", "RSI", "Glossary"])
 
     with tab1:
         st.header(f"{ticker} - Price Data")
@@ -105,7 +125,8 @@ def app():
         returns = price_df['Close'].pct_change().dropna()
         if not returns.empty:
             volatility = returns.std() * (252**0.5)
-            sharpe = (returns.mean() / returns.std()) * (252**0.5)
+            # Assuming risk-free rate is 0 for simplicity
+            sharpe = (returns.mean() / returns.std()) * (252**0.5) if returns.std() != 0 else 0
             cumulative = (1 + returns).cumprod()
             drawdown = 1 - cumulative / cumulative.cummax()
             max_dd = drawdown.max()
@@ -114,29 +135,50 @@ def app():
             st.metric("Annualized Volatility", f"{volatility:.2%}")
             st.metric("Sharpe Ratio (0% rf)", f"{sharpe:.2f}")
             st.metric("Max Drawdown", f"{max_dd:.2%}")
-            st.metric("VaR (95%)", f"{var_95:.2%}")
+            st.metric("Value at Risk (VaR 95%)", f"{var_95:.2%}")
         else:
             st.warning("Not enough return data to calculate risk metrics.")
 
+    # New tab to display the RSI chart and explanation
     with tab5:
+        st.header("Relative Strength Index (RSI)")
+        st.line_chart(price_df["RSI"])
+        st.info(
+            """
+            **How to Interpret RSI:**
+            The Relative Strength Index (RSI) is a momentum oscillator that measures the speed and change of price movements. RSI oscillates between zero and 100.
+            - An asset is typically considered **overbought** when the RSI is above 70.
+            - An asset is typically considered **oversold** when the RSI is below 30.
+            These are not direct buy/sell signals but can indicate potential trend reversals or pullbacks.
+            """
+        )
+
+    # Glossary tab with the new RSI definition
+    with tab6:
         st.header("Glossary")
-        st.write("Below are some key financial metrics")
+        st.write("Below are some key financial metrics and technical indicators.")
 
         st.subheader("ROA (Return on Assets)")
         st.write("ROA is a metric that measures a company's profitability in relation to its assets.")
-        st.latex(r"ROA = \frac{Net\ Income}{Total\ Assets}")
+        st.latex(r"ROA = \frac{\text{Net Income}}{\text{Total Assets}}")
 
         st.subheader("ROE (Return on Equity)")
         st.write("ROE measures a company's profitability relative to shareholder equity.")
-        st.latex(r"ROE = \frac{Net\ Income}{Shareholder\ Equity}")
+        st.latex(r"ROE = \frac{\text{Net Income}}{\text{Shareholder Equity}}")
 
         st.subheader("P/E Ratio (Price-to-Earnings)")
         st.write("Shows how much investors are willing to pay per dollar of earnings.")
-        st.latex(r"P/E = \frac{Stock\ Price}{Earnings\ per\ Share}")
+        st.latex(r"P/E = \frac{\text{Stock Price}}{\text{Earnings per Share}}")
 
         st.subheader("Dividend Yield")
         st.write("Represents dividend income relative to the stock price.")
-        st.latex(r"Dividend\ Yield = \frac{Annual\ Dividend}{Stock\ Price}")
+        st.latex(r"Dividend\ Yield = \frac{\text{Annual Dividend}}{\text{Stock Price}}")
+        
+        # Added RSI to the glossary
+        st.subheader("RSI (Relative Strength Index)")
+        st.write("A momentum indicator that measures the magnitude of recent price changes to evaluate overbought or oversold conditions.")
+        st.latex(r"RSI = 100 - \frac{100}{1 + RS}")
+        st.markdown(r"Where $RS$ (Relative Strength) is the ratio of average gains to average losses over a specific period, typically 14 days.")
 
 
 if __name__ == "__main__":
