@@ -5,10 +5,11 @@ import yfinance as yf
 
 @st.cache_data
 def load_price_data(ticker, period):
-    """Loads historical price data for a given ticker."""
+    """Loads historical price data for a given ticker and removes the 'Adj Close' column."""
     df = yf.download(ticker, period=period, interval="1d")
-    # Use standard column names for clarity
-    df.columns = ["Open", "High", "Low", "Close", "Adj Close", "Volume"]
+    # Drop the "Adj Close" column as it is not used in the app
+    if "Adj Close" in df.columns:
+        df = df.drop(columns=['Adj Close'])
     return df
 
 
@@ -98,7 +99,6 @@ def app():
         company_info = yf.Ticker(ticker).info.get('longBusinessSummary', "No information available")
         price_df = process_price_data(price_df)
 
-    # Added a new tab for RSI
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Charts", "Fundamentals", "Company Info", "Risk", "RSI", "Glossary"])
 
     with tab1:
@@ -125,7 +125,6 @@ def app():
         returns = price_df['Close'].pct_change().dropna()
         if not returns.empty:
             volatility = returns.std() * (252**0.5)
-            # Assuming risk-free rate is 0 for simplicity
             sharpe = (returns.mean() / returns.std()) * (252**0.5) if returns.std() != 0 else 0
             cumulative = (1 + returns).cumprod()
             drawdown = 1 - cumulative / cumulative.cummax()
@@ -139,21 +138,20 @@ def app():
         else:
             st.warning("Not enough return data to calculate risk metrics.")
 
-    # New tab to display the RSI chart and explanation
+    # Tab with updated RSI definition
     with tab5:
         st.header("Relative Strength Index (RSI)")
         st.line_chart(price_df["RSI"])
         st.info(
             """
-            **How to Interpret RSI:**
-            The Relative Strength Index (RSI) is a momentum oscillator that measures the speed and change of price movements. RSI oscillates between zero and 100.
-            - An asset is typically considered **overbought** when the RSI is above 70.
-            - An asset is typically considered **oversold** when the RSI is below 30.
-            These are not direct buy/sell signals but can indicate potential trend reversals or pullbacks.
+            **Interpreting the RSI Chart:**
+            The RSI is a momentum tool gauging the speed and magnitude of price changes to identify potentially overbought or oversold conditions.
+            - **Overbought (RSI > 70):** Suggests the asset may be overvalued and could be due for a price correction.
+            - **Oversold (RSI < 30):** Indicates the asset may be undervalued and could be poised for a rebound.
             """
         )
 
-    # Glossary tab with the new RSI definition
+    # Glossary tab with updated RSI definition
     with tab6:
         st.header("Glossary")
         st.write("Below are some key financial metrics and technical indicators.")
@@ -174,11 +172,10 @@ def app():
         st.write("Represents dividend income relative to the stock price.")
         st.latex(r"Dividend\ Yield = \frac{\text{Annual Dividend}}{\text{Stock Price}}")
         
-        # Added RSI to the glossary
         st.subheader("RSI (Relative Strength Index)")
-        st.write("A momentum indicator that measures the magnitude of recent price changes to evaluate overbought or oversold conditions.")
-        st.latex(r"RSI = 100 - \frac{100}{1 + RS}")
-        st.markdown(r"Where $RS$ (Relative Strength) is the ratio of average gains to average losses over a specific period, typically 14 days.")
+        st.write("A technical momentum indicator comparing recent gains to recent losses to measure the speed and change of a security's price movements and identify overbought or oversold conditions.")
+        st.latex(r"RSI = 100 - \frac{100}{1 + (\frac{\text{Average Gain}}{\text{Average Loss}})}")
+        st.markdown("The calculation uses a positive and negative moving average, typically over a 14-day period.")
 
 
 if __name__ == "__main__":
