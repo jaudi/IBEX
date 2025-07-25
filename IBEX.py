@@ -26,7 +26,7 @@ def get_price_data(ticker, period):
     # --- FIX ENDS HERE ---
 
     return price_df
-    return price_df
+    
 
 @st.cache_data
 def get_fundamental_data(ticker):
@@ -95,7 +95,7 @@ def app():
         st.line_chart(price_df["Return"])
 
     st.subheader("Volume")
-    st.bar_chart(price_df["volume"])
+    st.bar_chart(price_df["Volume"])
 
     # Display fundamental ratios and data table in columns
     col3, col4 = st.columns([1, 2]) # Give more space to the data table
