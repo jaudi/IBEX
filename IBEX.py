@@ -73,7 +73,7 @@ def app():
     # --- Calculations ---
     # Returns
     price_df['Return'] = (1 + price_df['Close'].pct_change()).cumprod() - 1
-    price_df['Return'] = price_df['Return'].fillna(0)
+    price_df['Return'] = price_df['Return'].dropna()
     
     # Moving Averages
     price_df['50MA'] = price_df['Close'].rolling(window=50).mean()
