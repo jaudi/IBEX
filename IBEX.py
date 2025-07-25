@@ -19,7 +19,7 @@ IBEX_TICKERS = (
 def get_price_data(ticker, period):
     """Fetches historical price data from yfinance and caches the result."""
     price_df = yf.download(ticker, period=period, interval="1d")
-     if isinstance(price_df.columns, pd.MultiIndex):
+    if isinstance(price_df.columns, pd.MultiIndex):
         price_df.columns = price_df.columns.droplevel(0)
     
     # Standardize column names to lowercase to avoid case-sensitivity issues (e.g., 'Close' vs 'close')
