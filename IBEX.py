@@ -28,28 +28,8 @@ def get_price_data(ticker, period):
     return price_df
     
 
-@st.cache_data
-def get_fundamental_data(ticker):
-    """Fetches fundamental data and returns it as a transposed DataFrame."""
-    ticker_obj = yf.Ticker(ticker)
-    info = ticker_obj.info
 
-    # Create the dictionary inside the function to avoid the state bug.
-    # The dictionary is built and returned in one go.
-    symbol_data = {
-        "Symbol": info.get("symbol", "N/A"),
-        "Current Price": info.get("currentPrice", "N/A"),
-        "P/E Ratio": info.get("trailingPE", "N/A"),
-        "Dividend Yield": info.get("dividendYield", "N/A"),
-        "ROA": info.get("returnOnAssets", "N/A"),
-        "ROE": info.get("returnOnEquity", "N/A"),
-        "Earnings Growth": info.get("earningsGrowth", "N/A"),
-        "Revenue Growth": info.get("revenueGrowth", "N/A"),
-        "Gross Margins": info.get("grossMargins", "N/A"),
-        "Operating Margins": info.get("operatingMargins", "N/A"),
-    }
-    # Create DataFrame and transpose it for a clean vertical display.
-    return pd.DataFrame.from_dict(symbol_data, orient='index', columns=['Value'])
+    
 
 # --- Main App Function ---
 def app():
@@ -94,24 +74,9 @@ def app():
         st.subheader("Cumulative Returns")
         st.line_chart(price_df["Return"])
 
-    st.subheader("Volume")
-    st.bar_chart(price_df["Volume"])
+   
 
-    # Display fundamental ratios and data table in columns
-    col3, col4 = st.columns([1, 2]) # Give more space to the data table
-    with col3:
-        st.subheader("Key Ratios")
-        st.dataframe(fundamental_df, use_container_width=True)
-
-    with col4:
-        st.subheader("Historical Price Data")
-        st.dataframe(price_df.sort_index(ascending=False), use_container_width=True)
-        st.download_button(
-            label="Download prices in CSV",
-            data=price_df.to_csv(index=True),
-            file_name=f"prices_{ticker}_{period}.csv",
-            mime="text/csv"
-        )
+    
 
 # --- App Entry Point ---
 if __name__ == "__main__":
