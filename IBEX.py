@@ -19,8 +19,14 @@ IBEX_TICKERS = (
 def get_price_data(ticker, period):
     """Fetches historical price data from yfinance and caches the result."""
     price_df = yf.download(ticker, period=period, interval="1d")
-    # Do NOT rename columns like this unless you are sure of the order. 
-    # The default yfinance names are standard and preferred.
+     if isinstance(price_df.columns, pd.MultiIndex):
+        price_df.columns = price_df.columns.droplevel(0)
+    
+    # Standardize column names to lowercase to avoid case-sensitivity issues (e.g., 'Close' vs 'close')
+    price_df.columns = [col.lower() for col in price_df.columns]
+    # --- FIX ENDS HERE ---
+
+    return price_df
     return price_df
 
 @st.cache_data
@@ -67,13 +73,13 @@ def app():
 
     # --- Calculations ---
     # Returns
-    price_df['Return'] = (1 + price_df['Close'].pct_change()).cumprod() - 1
+    price_df['Return'] = (1 + price_df['close'].pct_change()).cumprod() - 1
     price_df['Return'] = price_df['Return'].fillna(0)
     
     # Moving Averages
-    price_df['50MA'] = price_df['Close'].rolling(window=50).mean()
-    price_df['150MA'] = price_df['Close'].rolling(window=150).mean()
-    price_df['200MA'] = price_df['Close'].rolling(window=200).mean()
+    price_df['50MA'] = price_df['close'].rolling(window=50).mean()
+    price_df['150MA'] = price_df['close'].rolling(window=150).mean()
+    price_df['200MA'] = price_df['close'].rolling(window=200).mean()
 
     # --- Display Data ---
     st.header(f"Analysis for {ticker}")
@@ -89,8 +95,8 @@ def app():
         st.subheader("Cumulative Returns")
         st.line_chart(price_df["Return"])
 
-    st.subheader("Volume")
-    st.bar_chart(price_df["Volume"])
+    st.subheader("volume")
+    st.bar_chart(price_df["volume"])
 
     # Display fundamental ratios and data table in columns
     col3, col4 = st.columns([1, 2]) # Give more space to the data table
